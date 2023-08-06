@@ -7,3 +7,13 @@ export const createPrompt = (data: any) => {
 export const getPrompts = () => {
   return axios.get("/api/prompt/getPrompts");
 };
+
+export const userUpsert = (userId: string) => {
+  return axios.post("/api/user/upsert", {
+    userId,
+  });
+};
+
+export const getCategories = async (...args) => {
+  return await axios.get(...args);
+};

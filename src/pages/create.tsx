@@ -1,7 +1,5 @@
-import InputPrompt from "@src/Components/InputPrompt";
-import PromptContainer from "@src/Containers/PromptContainer";
-import { ChangeEvent } from "react";
+import CreateContainer from "@src/Containers/CreateContainer";
 
 export default function Create() {
-  return <PromptContainer />;
+  return <CreateContainer />;
 }

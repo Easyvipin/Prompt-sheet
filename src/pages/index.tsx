@@ -1,13 +1,11 @@
 import HomeContainer from "@src/Containers/HomeContainer";
 import { GetStaticProps } from "next";
 
-import prismaClient from "../../prisma";
-
-export default function Home({ prompts }) {
-  return <HomeContainer prompts={prompts} />;
+export default function Home(props) {
+  return <HomeContainer />;
 }
 
-export const getStaticProps: GetStaticProps<{}> = async () => {
+/* export const getStaticProps: GetStaticProps<{}> = async () => {
   const allPrompts = await prismaClient.prompt.findMany();
   return {
     props: {
@@ -15,3 +13,4 @@ export const getStaticProps: GetStaticProps<{}> = async () => {
     },
   };
 };
+ */
