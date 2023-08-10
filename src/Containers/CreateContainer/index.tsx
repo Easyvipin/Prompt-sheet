@@ -8,11 +8,6 @@ interface ICreateContainerProps {}
 const CreateContainer: React.FunctionComponent<ICreateContainerProps> = (
   props
 ) => {
-  const categoryRef = useRef();
-  const toolRef = useRef();
-  const newCategoryRef = useRef();
-  const [prompt, setPrompt] = useState("");
-
   const { userId } = useAuth();
   const { data, categoriesLoading } = useGetCategories(userId);
 
@@ -20,13 +15,7 @@ const CreateContainer: React.FunctionComponent<ICreateContainerProps> = (
 
   return (
     <div>
-      <InputArea
-        categoryRef={categoryRef}
-        toolRef={toolRef}
-        newCategoryRef={newCategoryRef}
-        onSubmit={handleSubmit}
-        setPrompt={setPrompt}
-      />
+      <InputArea />
     </div>
   );
 };
