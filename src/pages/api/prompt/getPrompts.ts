@@ -1,15 +1,58 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getAuth } from "@clerk/nextjs/server";
 import prismaClient from "../../../../prisma";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  try {
-    const allPrompts = await prismaClient.prompt.findMany();
-    res.status(200).json({ prompts: allPrompts });
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+  if (req.method === "GET") {
+    try {
+      const { userId } = getAuth(req);
+      let userPrompts;
+
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      /* check the userId exist in associated db */
+
+      const userExist = await prismaClient.user.findUnique({
+        where: {
+          clerkUserId: userId,
+        },
+      });
+
+      if (userExist) {
+        userPrompts = await prismaClient.user.findMany({
+          where: {
+            clerkUserId: userId,
+          },
+          select: {
+            Prompts: {
+              select: {
+                id: true,
+                content: true,
+                aiTool: true,
+                category: true,
+                createdAt: true,
+              },
+            },
+          },
+        });
+        res.status(200).json({
+          prompts: userPrompts[0].Prompts,
+        });
+      } else {
+        res.status(200).json({
+          prompts: [],
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  } else {
+    res.status(405).json({ message: "Method not allowed" });
   }
 }

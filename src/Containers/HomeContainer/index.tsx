@@ -1,6 +1,8 @@
 import { useAuth } from "@clerk/nextjs";
 import { userUpsert } from "@src/services/apiRequests";
 import React, { useEffect } from "react";
+import { useAllPrompts } from "./hooks";
+import PromptCard from "@src/Components/UI/PromptCard";
 
 interface IHomeContainerProps {}
 
@@ -16,6 +18,8 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
       checkUser(userId);
     }
   }, [userId]);
+
+  const { data, isLoading, error } = useAllPrompts();
 
   return (
     <div className="">
@@ -60,215 +64,18 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
           <button className="border px-6 rounded">Filter</button>
         </div>
       </div>
-      <div className="cards flex gap-8 mt-8 flex-wrap ">
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between overflow-hidden">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
+      {!isLoading && data.length > 0 && (
+        <div className="cards flex gap-8 mt-8 flex-wrap ">
+          {data.map((eachPrompt) => (
+            <PromptCard
+              key={eachPrompt.id}
+              aiTool={eachPrompt.aiTool}
+              category={eachPrompt.category.type}
+              content={eachPrompt.content}
+            />
+          ))}
         </div>
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col border-gray-300 border shadow-md rounded h-[20rem] w-[20rem] p-4 justify-between">
-          <div className="flex justify-start gap-2 mb-2">
-            <span className="bg-black px-2 py-1 text-sm rounded text-green-300">
-              ChatGpt
-            </span>{" "}
-            <span className="bg-gray-300 px-2 py-1 text-sm rounded text-gray-800">
-              Category
-            </span>
-          </div>
-          <p className="text-xl font-serif text-gray-600">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia
-            consectetur deleniti assumenda exercitationem sequi corrupti
-            consequatur fuga error earum rerum.
-          </p>
-
-          <div className="flex gap-2 mt-4 items-center justify-between">
-            <h3 className="text-sm font-mono font-bold text-green-600">80%</h3>
-            <div className="flex justify-end gap-2">
-              <button className="px-4 border py-1 rounded">Share</button>
-              <button className="px-4 border py-1">View</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

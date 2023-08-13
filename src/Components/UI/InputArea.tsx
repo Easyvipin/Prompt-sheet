@@ -11,30 +11,43 @@ const MDXEditor = dynamic(
 );
 
 interface IInputAreaProps {
-  categoryRef: RefObject<HTMLSelectElement>;
-  toolRef: RefObject<HTMLSelectElement>;
-  newCategoryRef: RefObject<HTMLInputElement>;
-  onSubmit: () => void; // Replace 'void' with the appropriate return type if needed
-  setPrompt: () => void;
+  category: string;
+  tool: string;
+  handleSubmit: (category: string, tool: string, prompt: string) => void;
+  isEdit?: Boolean;
 }
 
-const InputArea: React.FunctionComponent<IInputAreaProps> = ({}) => {
+const InputArea: React.FunctionComponent<IInputAreaProps> = ({
+  category,
+  tool,
+  handleSubmit,
+  isEdit,
+}) => {
   const initialValues = {
     tool: "",
     category: "",
     newCategory: "",
-    prompt: "## hello world",
+    prompt: "## Prompt Header \n Describe your prompt here",
   };
 
   const validationSchema = object({
     tool: string().required("Tool is required"),
-    category: string().required("Category is required"),
+    category: string(),
     newCategory: string(),
   });
 
   const onSubmit = (values: any) => {
-    // Handle form submission here
     console.log(values);
+    const { prompt, category, tool, newCategory } = values;
+
+    if (prompt?.length > 0 && category.length > 0) {
+      handleSubmit(category, tool, prompt);
+    } else if (prompt?.length > 0 && newCategory.length > 0) {
+      handleSubmit(newCategory, tool, prompt);
+    } else {
+      /* Please describe your prompt here */
+      alert("Please describe your prompt here");
+    }
   };
 
   return (
@@ -45,7 +58,7 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({}) => {
     >
       {({ handleChange, values, errors }) => (
         <Form className="">
-          <div className="flex justify-between items-center flex-wrap">
+          <div className="flex justify-between items-center flex-wrap h-32">
             <h3 className="text-xl md:text-3xl m-2 font-semibold">
               Describe your prompt here!
             </h3>

@@ -22,19 +22,17 @@ model Category {
   type     String 
   author   User    @relation(fields: [authorId], references: [clerkUserId])
   authorId String
-  prompt     Prompt[]    @relation(fields: [promptIds] , references: [id])
-  promptIds  String[]  @db.ObjectId
+  Prompts   Prompt[]   
 } 
 
 model Prompt {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  que      String
-  ans      String?
+  content  String
   aiTool   String
   author   User    @relation(fields: [authorId], references: [clerkUserId])
   authorId String
-  categoryIds String[] @db.ObjectId
-  categories Category[]  @relation(fields: [categoryIds], references: [id])
+  categoryIds String @db.ObjectId
+  category Category  @relation(fields: [categoryIds], references: [id])
   createdAt              DateTime            @default(now())
   updatedAt              DateTime?            @updatedAt 
 }

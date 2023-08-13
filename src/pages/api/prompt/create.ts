@@ -6,16 +6,48 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { que } = req.body;
+  if (req.method === "POST") {
+    try {
+      let { category, tool, prompt, userId } = req.body;
+      let categoryDoc;
+      /* check if the current category exist */
+      const categoryExist = await prismaClient.category.findFirst({
+        where: {
+          authorId: userId,
+          type: category,
+        },
+      });
 
-  try {
-    await prismaClient.prompt.create({
-      data: {
-        que: que,
-      },
-    });
-    res.status(200).end();
-  } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+      if (!categoryExist) {
+        categoryDoc = await prismaClient.category.create({
+          data: {
+            type: category,
+            authorId: userId,
+          },
+        });
+      } else {
+        categoryDoc = categoryExist;
+      }
+
+      /* Create a prompt with determined category */
+
+      const newPrompt = await prismaClient.prompt.create({
+        data: {
+          content: prompt,
+          aiTool: tool,
+          author: { connect: { clerkUserId: userId } },
+          category: {
+            connect: {
+              id: categoryDoc?.id,
+            },
+          },
+        },
+      });
+      res.status(201).end();
+    } catch (error) {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  } else {
+    res.status(405).json({ message: "Method not allowed" });
   }
 }
