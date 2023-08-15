@@ -1,9 +1,10 @@
-import React, { RefObject } from "react";
+import React from "react";
 import { object, string } from "yup";
 import dynamic from "next/dynamic";
 import "@mdxeditor/editor/style.css";
-import { aiToolsOption } from "@src/utils/constants";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { aiToolsOption, promptCategories } from "@src/utils/constants";
+import { ErrorMessage, Field, Form, Formik, FormikHelpers } from "formik";
+import { ClipLoader } from "react-spinners";
 
 const MDXEditor = dynamic(
   () => import("@mdxeditor/editor").then((mod) => mod.MDXEditor),
@@ -14,7 +15,8 @@ interface IInputAreaProps {
   category: string;
   tool: string;
   handleSubmit: (category: string, tool: string, prompt: string) => void;
-  isEdit?: Boolean;
+  isEdit?: boolean;
+  loading: boolean;
 }
 
 const InputArea: React.FunctionComponent<IInputAreaProps> = ({
@@ -22,12 +24,13 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
   tool,
   handleSubmit,
   isEdit,
+  loading,
 }) => {
   const initialValues = {
     tool: "",
     category: "",
     newCategory: "",
-    prompt: "## Prompt Header \n Describe your prompt here",
+    prompt: "Enter or paste your AI prompt here...",
   };
 
   const validationSchema = object({
@@ -36,8 +39,7 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
     newCategory: string(),
   });
 
-  const onSubmit = (values: any) => {
-    console.log(values);
+  const onSubmit = (values: any, { setErrors }: FormikHelpers<any>) => {
     const { prompt, category, tool, newCategory } = values;
 
     if (prompt?.length > 0 && category.length > 0) {
@@ -45,8 +47,7 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
     } else if (prompt?.length > 0 && newCategory.length > 0) {
       handleSubmit(newCategory, tool, prompt);
     } else {
-      /* Please describe your prompt here */
-      alert("Please describe your prompt here");
+      setErrors({ category: "Please choose a category!" });
     }
   };
 
@@ -58,8 +59,8 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
     >
       {({ handleChange, values, errors }) => (
         <Form className="">
-          <div className="flex justify-between items-center flex-wrap h-32">
-            <h3 className="text-xl md:text-3xl m-2 font-semibold">
+          <div className="flex justify-between items-start flex-wrap h-20 gap-2">
+            <h3 className=" text-lg md:text-3xl font-semibold">
               Describe your prompt here!
             </h3>
             <div className="flex gap-3 flex-wrap justify-start">
@@ -67,14 +68,18 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
                 <Field
                   as="select"
                   name="tool"
-                  className="p-2 border rounded px-2"
+                  className="p-2 border rounded px-2 text-gray-600"
                   placeholder="Choose tool"
                 >
                   <option value="" className="text-center" disabled>
                     Choose Tool
                   </option>
                   {aiToolsOption.map((eachOption) => (
-                    <option key={eachOption.value} value={eachOption.value}>
+                    <option
+                      key={eachOption.value}
+                      className="text-center"
+                      value={eachOption.value}
+                    >
                       {eachOption.label}
                     </option>
                   ))}
@@ -95,10 +100,12 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
                   <option value="" className="text-center" disabled>
                     Choose Category
                   </option>
-                  <option value="volvo">Volvo</option>
-                  <option value="saab">Saab</option>
-                  <option value="opel">Opel</option>
-                  <option value="audi">Audi</option>
+                  <option value="general">General</option>
+                  {promptCategories.map((eachCategory) => (
+                    <option key={eachCategory.label} value={eachCategory.value}>
+                      {eachCategory.label}
+                    </option>
+                  ))}
                 </Field>
                 <ErrorMessage
                   name="category"
@@ -123,21 +130,29 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
 
               <button
                 type="submit"
-                className="border px-6 rounded h-11 bg-black text-white"
+                className=" flex justify-center gap-2 items-center border px-6 rounded h-11 bg-black text-white"
+                disabled={loading}
               >
-                Save
+                {!loading ? (
+                  "Save"
+                ) : (
+                  <>
+                    Saving
+                    <ClipLoader size={20} color={"#ccc"} />
+                  </>
+                )}
               </button>
             </div>
           </div>
 
-          <div className="border mt-10 min-h-[60vh]">
+          <div className="border mt-2 min-h-[60vh]">
             <MDXEditor
               markdown={values.prompt}
               onChange={(markdown) => {
                 handleChange({ target: { name: "prompt", value: markdown } });
                 return;
               }}
-              contentEditableClassName="prose"
+              contentEditableClassName="prose prose-gray"
             />
           </div>
         </Form>

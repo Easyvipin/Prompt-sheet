@@ -4,12 +4,14 @@ import { useGetCategories } from "./hooks";
 import { useAuth } from "@clerk/nextjs";
 
 import { createPrompt } from "@src/services/apiRequests";
+import { useRouter } from "next/router";
 
 interface ICreateContainerProps {}
 
 const CreateContainer: React.FunctionComponent<ICreateContainerProps> = (
   props
 ) => {
+  const router = useRouter();
   const { userId } = useAuth();
   const { data, categoriesLoading } = useGetCategories(userId);
   const [isLoading, setLoading] = useState(false);
@@ -27,11 +29,15 @@ const CreateContainer: React.FunctionComponent<ICreateContainerProps> = (
     };
     setLoading(true);
     const response = await createPrompt(data);
+    if (response?.status == 201) {
+      setLoading(false);
+      router.push("/");
+    }
   };
 
   return (
     <div>
-      <InputArea handleSubmit={handleSubmit} />
+      <InputArea handleSubmit={handleSubmit} loading={isLoading} />
     </div>
   );
 };

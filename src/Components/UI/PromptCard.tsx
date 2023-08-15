@@ -25,7 +25,7 @@ const PromptCard: React.FunctionComponent<IPromptCardProps> = ({
         </span>
       </div>
       <p className="text-xl font-serif text-gray-600">
-        <ReactMarkdown>{content.slice(0, 100)}</ReactMarkdown>
+        <ReactMarkdown className="prose">{content.slice(0, 100)}</ReactMarkdown>
       </p>
 
       <div className="flex gap-2 mt-4 items-center justify-between">
