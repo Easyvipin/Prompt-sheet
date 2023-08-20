@@ -11,9 +11,9 @@ const PageLayout: React.FunctionComponent<IPageLayoutProps> = ({
 }) => {
   return (
     <main className="font-sans text-gray-600">
-      <header className="p-2  flex flex-col justify-center border border-gray-200 items-center">
-        <h1 className=" font-mono font-semibold">PromptSheet.</h1>
-        <nav className="mt-4 tracking-wide flex gap-8 justify-center">
+      <header className="p-2 flex justify-between border border-gray-200 items-baseline">
+        <h1 className="font-mono font-semibold  text-xl">PromptSheet.</h1>
+        <nav className="mt-4 tracking-wide flex gap-8 justify-center items-center">
           <Link
             href="/categories"
             className=" font-serif hover:text-gray-500 hover:underline"
@@ -32,7 +32,14 @@ const PageLayout: React.FunctionComponent<IPageLayoutProps> = ({
           >
             create
           </Link>
-          <UserButton  afterSignOutUrl="/sign-up" />
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "w-8 h-8 border border-gray-400",
+              },
+            }}
+            afterSignOutUrl="/sign-up"
+          />
         </nav>
       </header>
       <div className="m-8">{children}</div>

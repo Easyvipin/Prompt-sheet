@@ -3,6 +3,7 @@ import { userUpsert } from "@src/services/apiRequests";
 import React, { useEffect } from "react";
 import { useAllPrompts } from "./hooks";
 import PromptCard from "@src/Components/UI/PromptCard";
+import Loader from "@src/Components/UI/Loader";
 
 interface IHomeContainerProps {}
 
@@ -24,14 +25,14 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
   return (
     <div className="">
       <div className="flex justify-between">
-        <h1 className="text-2xl">Your prompts!</h1>
+        <h1 className="text-xl">Your prompts!</h1>
 
         <div className="flex gap-3 flex-wrap justify-start">
           <select
             name="cars"
             id="cars"
             form="carform"
-            className="p-2 border rounded px-2"
+            className="p-2 border rounded px-2 text-sm"
             placeholder="Choose Category"
           >
             <option value="" className="text-center" disabled selected>
@@ -46,7 +47,7 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
             name="cars"
             id="cars"
             form="carform"
-            className="p-2 border rounded px-2"
+            className="p-2 border rounded px-2 text-sm  "
             placeholder="Choose Category"
           >
             <option value="" className="text-center" disabled selected>
@@ -57,16 +58,18 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
             <option value="opel">Opel</option>
             <option value="audi">Audi</option>
           </select>
-          <input
-            className="rounded p-2 border"
-            placeholder="Add new Category"
-          />
-          <button className="border px-6 rounded">Filter</button>
+          <button className="border px-6 bg-black text-white rounded text-sm">
+            Filter
+          </button>
         </div>
       </div>
-      {!isLoading && data.length > 0 && (
-        <div className="cards flex gap-8 mt-8 flex-wrap ">
-          {data.map((eachPrompt) => (
+      <div className="cards flex h-[75vh] border border-dashed border-gray-300 overflow-y-scroll justify-between gap-y-[2rem] flex-wrap p-8 mt-2">
+        {isLoading && (
+          <Loader size={40} color="#000" message="Looking for prompts" />
+        )}
+        {!isLoading &&
+          data.length > 0 &&
+          data.map((eachPrompt) => (
             <PromptCard
               key={eachPrompt.id}
               aiTool={eachPrompt.aiTool}
@@ -74,8 +77,7 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
               content={eachPrompt.content}
             />
           ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 };
