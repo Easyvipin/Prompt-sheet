@@ -10,10 +10,19 @@ export default async function handler(
   if (req.method === "GET") {
     try {
       const { userId } = getAuth(req);
+      const { category: desiredCategory, tool: desiredTool } = req.query;
+      const filterObj = {};
       let userPrompts;
 
       if (!userId) {
         return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      if (desiredCategory) {
+        filterObj["categoryIds"] = desiredCategory;
+      }
+      if (desiredTool) {
+        filterObj["aiTool"] = desiredTool;
       }
 
       /* check the userId exist in associated db */
@@ -31,6 +40,7 @@ export default async function handler(
           },
           select: {
             Prompts: {
+              where: filterObj,
               select: {
                 id: true,
                 content: true,

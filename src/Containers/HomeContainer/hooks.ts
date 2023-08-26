@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 export function useAllPrompts(category?: string, tool?: string) {
   const { data, isLoading, error } = useSWR(
-    `/api/prompt/getPrompts`,
+    `/api/prompt/getPrompts?category=${category}&tool=${tool}`,
     getPrompts
   );
 

@@ -1,14 +1,18 @@
 import { useAuth } from "@clerk/nextjs";
 import { userUpsert } from "@src/services/apiRequests";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAllPrompts } from "./hooks";
 import PromptCard from "@src/Components/UI/PromptCard";
 import Loader from "@src/Components/UI/Loader";
+import { aiToolsOption, promptCategories } from "@src/utils/constants";
+import { useGetCategories } from "@src/hooks/swrhooks";
 
 interface IHomeContainerProps {}
 
 const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
-  const { isLoaded, userId } = useAuth();
+  const { userId } = useAuth();
+  const [category, setCategory] = useState("");
+  const [tool, setTool] = useState("");
 
   useEffect(() => {
     async function checkUser(userId: string) {
@@ -20,7 +24,9 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
     }
   }, [userId]);
 
-  const { data, isLoading, error } = useAllPrompts();
+  const { data: prompts, isLoading, error } = useAllPrompts(category, tool);
+
+  const { data: categories } = useGetCategories(userId);
 
   return (
     <div className="">
@@ -34,14 +40,22 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
             form="carform"
             className="p-2 border rounded px-2 text-sm"
             placeholder="Choose Category"
+            onChange={(e) => {
+              setTool(e.target.value);
+            }}
           >
             <option value="" className="text-center" disabled selected>
-              chatGPT
+              Choose Tool
             </option>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
+            {aiToolsOption.map((eachOption) => (
+              <option
+                key={eachOption.value}
+                className="text-center"
+                value={eachOption.value}
+              >
+                {eachOption.label}
+              </option>
+            ))}
           </select>
           <select
             name="cars"
@@ -49,27 +63,32 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
             form="carform"
             className="p-2 border rounded px-2 text-sm  "
             placeholder="Choose Category"
+            onChange={(e) => {
+              setCategory(e.target.value);
+            }}
           >
             <option value="" className="text-center" disabled selected>
               Choose Category
             </option>
-            <option value="volvo">Volvo</option>
-            <option value="saab">Saab</option>
-            <option value="opel">Opel</option>
-            <option value="audi">Audi</option>
+            <option value="general">General</option>
+            {categories?.map((eachCategory) => (
+              <option key={eachCategory.type} value={eachCategory.id}>
+                {eachCategory.type}
+              </option>
+            ))}
           </select>
-          <button className="border px-6 bg-black text-white rounded text-sm">
+          <div className="border px-6 py-2 bg-black text-white rounded text-sm cursor-pointer disabled:bg-gray-500">
             Filter
-          </button>
+          </div>
         </div>
       </div>
-      <div className="cards flex h-[75vh] border border-dashed border-gray-300 overflow-y-scroll justify-between gap-y-[2rem] flex-wrap p-8 mt-2">
+      <div className="cards flex h-[75vh] border border-dashed border-gray-300 overflow-y-scroll justify-center  gap-y-[2rem] gap-x-5 flex-wrap p-8 mt-2">
         {isLoading && (
           <Loader size={40} color="#000" message="Looking for prompts" />
         )}
         {!isLoading &&
-          data.length > 0 &&
-          data.map((eachPrompt) => (
+          prompts.length > 0 &&
+          prompts.map((eachPrompt) => (
             <PromptCard
               key={eachPrompt.id}
               aiTool={eachPrompt.aiTool}

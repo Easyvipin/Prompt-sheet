@@ -1,12 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prismaClient from "../../../../prisma";
+import {
+  CategoryType,
+  promptCategoriesMapWithUser,
+} from "@src/utils/constants";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { userId: clerkUserId } = req.body;
-  console.log(clerkUserId);
   if (req.method === "POST") {
     try {
       const existUser = await prismaClient.user.findUnique({
@@ -15,10 +18,15 @@ export default async function handler(
         },
       });
       if (!existUser) {
-        const newUser = await prismaClient.user.create({
+        await prismaClient.user.create({
           data: {
             clerkUserId: clerkUserId,
           },
+        });
+        /* creating default categories for each user */
+        const defaultCategories = promptCategoriesMapWithUser(clerkUserId);
+        await prismaClient.category.createMany({
+          data: defaultCategories,
         });
       }
       res.status(201).end();

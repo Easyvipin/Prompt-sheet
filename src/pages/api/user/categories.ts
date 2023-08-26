@@ -5,12 +5,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { user: clerkUserId } = req.query;
-  console.log(clerkUserId);
+  const { userId: clerkUserId } = req.query;
 
   if (req.method === "GET") {
     try {
-      const categories = await prismaClient.user.findUnique({
+      const categories = await prismaClient.user.findMany({
         where: {
           clerkUserId: clerkUserId,
         },
@@ -19,10 +18,9 @@ export default async function handler(
         },
       });
       res.status(201).json({
-        categories,
+        categories: categories[0].Categories,
       });
     } catch (error) {
-      console.log(error);
       res.status(500).json({ message: "Something went wrong" });
     }
   } else {

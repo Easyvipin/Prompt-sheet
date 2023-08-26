@@ -41,13 +41,13 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
 
   const onSubmit = (values: any, { setErrors }: FormikHelpers<any>) => {
     const { prompt, category, tool, newCategory } = values;
-
-    if (prompt?.length > 0 && category.length > 0) {
-      handleSubmit(category, tool, prompt);
-    } else if (prompt?.length > 0 && newCategory.length > 0) {
-      handleSubmit(newCategory, tool, prompt);
+    const selectedCategory = newCategory || category;
+    if (!prompt) {
+      setErrors({ prompt: "Please describe your prompt here before saving.." });
+    } else if (!selectedCategory) {
+      setErrors({ category: "Please select or add a ctegory" });
     } else {
-      setErrors({ category: "Please choose a category!" });
+      handleSubmit(category, tool, prompt);
     }
   };
 
@@ -146,6 +146,11 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
           </div>
 
           <div className="border mt-2 min-h-[60vh]">
+            <ErrorMessage
+              name="prompt"
+              component="div"
+              className="text-red-400 text-[1rem] mt-1 text-center px-2 py-2 bg-black"
+            />
             <MDXEditor
               markdown={values.prompt}
               onChange={(markdown) => {

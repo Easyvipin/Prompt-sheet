@@ -24,8 +24,8 @@ const PromptCard: React.FunctionComponent<IPromptCardProps> = ({
           {category}
         </span>
       </div>
-      <p className="text-xl font-serif text-gray-600">
-        <ReactMarkdown className="prose">{content.slice(0, 100)}</ReactMarkdown>
+      <p className="text-xl text-gray-600">
+        <ReactMarkdown className="font-semibold">{content}</ReactMarkdown>
       </p>
 
       <div className="flex gap-2 mt-4 items-center justify-between">
