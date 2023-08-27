@@ -31,8 +31,7 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
   return (
     <div className="">
       <div className="flex justify-between">
-        <h1 className="text-xl">Your prompts!</h1>
-
+        <h1 className="text-xl dark:text-red-600">Your prompts!</h1>
         <div className="flex gap-3 flex-wrap justify-start">
           <select
             name="cars"

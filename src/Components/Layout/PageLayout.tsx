@@ -1,6 +1,7 @@
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import React from "react";
+import ThemeChanger from "../UI/ThemeChanger";
 
 interface IPageLayoutProps {
   children: React.ReactNode;
@@ -10,10 +11,11 @@ const PageLayout: React.FunctionComponent<IPageLayoutProps> = ({
   children,
 }) => {
   return (
-    <main className="font-sans text-gray-600">
+    <main className="font-sans text-gray-600 ">
       <header className="p-2 flex justify-between border border-gray-200 items-baseline">
         <h1 className="font-mono font-semibold  text-xl">PromptSheet.</h1>
         <nav className="mt-4 tracking-wide flex gap-8 justify-center items-center">
+          <ThemeChanger />
           <Link
             href="/categories"
             className=" font-serif hover:text-gray-500 hover:underline"
