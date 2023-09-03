@@ -1,13 +1,17 @@
 import { useAuth } from "@clerk/nextjs";
 import { userUpsert } from "@src/services/apiRequests";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAllPrompts } from "./hooks";
 import PromptCard from "@src/Components/UI/PromptCard";
 import Loader from "@src/Components/UI/Loader";
-import { aiToolsOption, promptCategories } from "@src/utils/constants";
+import { aiToolsOption } from "@src/utils/constants";
 import { useGetCategories } from "@src/hooks/swrhooks";
 
 interface IHomeContainerProps {}
+interface ICategories {
+  type: string;
+  id: string;
+}
 
 const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
   const { userId } = useAuth();
@@ -31,7 +35,7 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
   return (
     <div className="">
       <div className="flex justify-between">
-        <h1 className="text-xl dark:text-red-600">Your prompts!</h1>
+        <h1 className="text-xl dark:text-red-600 text-headlineColor"></h1>
         <div className="flex gap-3 flex-wrap justify-start">
           <select
             name="cars"
@@ -70,18 +74,18 @@ const HomeContainer: React.FunctionComponent<IHomeContainerProps> = (props) => {
               Choose Category
             </option>
             <option value="general">General</option>
-            {categories?.map((eachCategory) => (
+            {categories?.map((eachCategory: ICategories) => (
               <option key={eachCategory.type} value={eachCategory.id}>
                 {eachCategory.type}
               </option>
             ))}
           </select>
-          <div className="border px-6 py-2 bg-black text-white rounded text-sm cursor-pointer disabled:bg-gray-500">
+          <div className="border px-6 py-2  bg-primaryButtonBackground text-primaryButtonText rounded text-sm font-bold cursor-pointer disabled:bg-gray-500">
             Filter
           </div>
         </div>
       </div>
-      <div className="cards flex h-[75vh] border border-dashed border-gray-300 overflow-y-scroll justify-center  gap-y-[2rem] gap-x-5 flex-wrap p-8 mt-2">
+      <div className="cards flex h-[75vh] border border-dashed border-gray-300 overflow-y-auto justify-start  gap-y-[2rem] gap-x-5 flex-wrap p-8 mt-2 bg-tertiaryColorBackground">
         {isLoading && (
           <Loader size={40} color="#000" message="Looking for prompts" />
         )}

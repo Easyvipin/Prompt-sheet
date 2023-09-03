@@ -11,16 +11,22 @@ const MDXEditor = dynamic(
   { ssr: false }
 );
 
+interface ICategories {
+  type: string;
+  id: string;
+}
+
 interface IInputAreaProps {
-  category: string;
-  tool: string;
+  categories: ICategories[];
+  categoryId?: string;
+  tool?: string;
   handleSubmit: (category: string, tool: string, prompt: string) => void;
   isEdit?: boolean;
   loading: boolean;
 }
 
 const InputArea: React.FunctionComponent<IInputAreaProps> = ({
-  category,
+  categories,
   tool,
   handleSubmit,
   isEdit,
@@ -101,9 +107,9 @@ const InputArea: React.FunctionComponent<IInputAreaProps> = ({
                     Choose Category
                   </option>
                   <option value="general">General</option>
-                  {promptCategories.map((eachCategory) => (
-                    <option key={eachCategory.label} value={eachCategory.value}>
-                      {eachCategory.label}
+                  {categories?.map((eachCategory) => (
+                    <option key={eachCategory.type} value={eachCategory.id}>
+                      {eachCategory.type}
                     </option>
                   ))}
                 </Field>

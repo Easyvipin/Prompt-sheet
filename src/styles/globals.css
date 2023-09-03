@@ -12,6 +12,7 @@
     --color-primary-button: #ffd803;
     --color-primary-button-text: #272343;
     --color-tertiary: #bae8e8;
+    --color-tertiary-background: #e3f6f5;
   }
   :root[class~="dark"] {
     --color-background: #0f0e17;
@@ -22,6 +23,7 @@
     --color-primary-button: #ff8906;
     --color-primary-button-text: #fffffe;
     --color-tertiary: #e53170;
+    --color-tertiary-background: #fffffe;
   }
 }
 
